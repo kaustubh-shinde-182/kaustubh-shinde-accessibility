@@ -76,90 +76,94 @@ const App = () => {
           handleCalculate();
         }}
       >
-        <label
-          htmlFor="numbers-input"
-          style={{ display: "block", marginBottom: "8px" }}
-        >
-          <h2 style={{ fontSize: "20px", margin: "0 0 8px 0" }}>
-            Enter numbers
-          </h2>
-        </label>
+        <div>
+          <label
+            htmlFor="numbers-input"
+            style={{ display: "block", marginBottom: "8px" }}
+          >
+            <h2 style={{ fontSize: "20px", margin: "0 0 8px 0" }}>
+              Enter numbers
+            </h2>
+          </label>
+          <div>
+            <textarea
+              id="numbers-input"
+              style={{
+                margin: "10px 0",
+                color: "#333",
+                border: error ? "2px solid #dc3545" : "2px solid #008cba",
+                borderRadius: "4px",
+                padding: "8px",
+                width: "100%",
+                maxWidth: "400px",
+                outline: "none",
+                fontFamily: "monospace",
+              }}
+              placeholder='Examples: "1,2,3" or "1\n2,3" or "//;\n1;2"'
+              value={input}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyDown={handleTextareaKeyDown}
+              aria-describedby="input-instructions"
+              aria-invalid={!!error}
+            />
+            <div>
+              <button
+                ref={buttonRef}
+                type="submit"
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#008cba",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  outline: "none",
+                  marginRight: "10px",
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Tab" && e.shiftKey) {
+                    e.preventDefault();
+                    const textarea = document.getElementById("numbers-input");
+                    textarea?.focus();
+                  }
+                }}
+                onFocus={(e) => {
+                  e.target.style.boxShadow = "0 0 0 3px rgba(0, 140, 186, 0.5)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.boxShadow = "none";
+                }}
+              >
+                Calculate
+              </button>
 
-        <textarea
-          id="numbers-input"
-          style={{
-            margin: "10px 0",
-            color: "#333",
-            border: error ? "2px solid #dc3545" : "2px solid #008cba",
-            borderRadius: "4px",
-            padding: "8px",
-            width: "100%",
-            maxWidth: "400px",
-            outline: "none",
-            fontFamily: "monospace",
-          }}
-          placeholder='Examples: "1,2,3" or "1\n2,3" or "//;\n1;2"'
-          value={input}
-          onChange={(e) => handleInputChange(e.target.value)}
-          onKeyDown={handleTextareaKeyDown}
-          aria-describedby="input-instructions"
-          aria-invalid={!!error}
-        />
-
-        <button
-          ref={buttonRef}
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#008cba",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "16px",
-            outline: "none",
-            marginRight: "10px",
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Tab" && e.shiftKey) {
-              e.preventDefault();
-              const textarea = document.getElementById("numbers-input");
-              textarea?.focus();
-            }
-          }}
-          onFocus={(e) => {
-            e.target.style.boxShadow = "0 0 0 3px rgba(0, 140, 186, 0.5)";
-          }}
-          onBlur={(e) => {
-            e.target.style.boxShadow = "none";
-          }}
-        >
-          Calculate
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setInput("");
-            setResult(null);
-            setError(null);
-            setShowAlert(false);
-            const textarea = document.getElementById("numbers-input");
-            textarea?.focus();
-          }}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#6c757d",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "16px",
-            outline: "none",
-          }}
-        >
-          Clear
-        </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setInput("");
+                  setResult(null);
+                  setError(null);
+                  setShowAlert(false);
+                  const textarea = document.getElementById("numbers-input");
+                  textarea?.focus();
+                }}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#6c757d",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  outline: "none",
+                }}
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
 
       {result !== null && (
