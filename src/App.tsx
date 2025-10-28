@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const App = () => {
   const [input, setInput] = useState("");
   const [result] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleCalculate = () => {
     // For now, just show the alert to demonstrate
@@ -11,7 +12,14 @@ const App = () => {
     setTimeout(() => setShowAlert(false), 3000);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleTextareaKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (event.key === "Tab" && !event.shiftKey) {
+      // Tab from textarea should go to button
+      event.preventDefault();
+      buttonRef.current?.focus();
+    }
     if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
       handleCalculate();
     }
@@ -28,7 +36,12 @@ const App = () => {
 
       <h1>String Calculator</h1>
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCalculate();
+        }}
+      >
         <label
           htmlFor="numbers-input"
           style={{ display: "block", marginBottom: "8px" }}
@@ -48,17 +61,18 @@ const App = () => {
             padding: "8px",
             width: "100%",
             maxWidth: "400px",
+            outline: "none",
           }}
           placeholder="Example: 1,2,3"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleTextareaKeyDown}
           aria-describedby="input-instructions"
         />
 
         <button
-          type="button"
-          onClick={handleCalculate}
+          ref={buttonRef}
+          type="submit"
           style={{
             padding: "10px 20px",
             backgroundColor: "#008cba",
@@ -67,23 +81,43 @@ const App = () => {
             borderRadius: "4px",
             cursor: "pointer",
             fontSize: "16px",
+            outline: "none",
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Tab" && e.shiftKey) {
+              // Shift+Tab from button should go back to textarea
+              e.preventDefault();
+              const textarea = document.getElementById("numbers-input");
+              textarea?.focus();
+            }
+          }}
+          onFocus={(e) => {
+            e.target.style.boxShadow = "0 0 0 3px rgba(0, 140, 186, 0.5)";
+          }}
+          onBlur={(e) => {
+            e.target.style.boxShadow = "none";
           }}
         >
           Calculate
         </button>
       </form>
 
-      {result !== null && <p style={{ color: "green" }}>Result: {result}</p>}
+      {result !== null && (
+        <p style={{ color: "green" }} role="status" aria-live="polite">
+          Result: {result}
+        </p>
+      )}
 
       {showAlert && (
         <div
           role="alert"
-          aria-live="polite"
+          aria-live="assertive"
           style={{
             marginTop: "16px",
-            padding: "8px",
+            padding: "12px",
             backgroundColor: "#fff3cd",
             border: "1px solid #ffeaa7",
+            borderRadius: "4px",
           }}
         >
           <p style={{ color: "#856404", margin: 0 }}>
