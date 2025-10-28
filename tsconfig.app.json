@@ -32,5 +32,5 @@
     "target": "ESNext",
     "strict": true
   },
-  "include": ["src"]
+  "include": ["src", "src/types"]
 }

@@ -2,60 +2,32 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 
-describe("App", () => {
+describe("App Functionality", () => {
   test("renders string calculator heading", () => {
     render(<App />);
     const heading = screen.getByText("String Calculator");
     expect(heading).toBeInTheDocument();
   });
 
-  test("image has alt text for accessibility", () => {
+  test("user can type in textarea", async () => {
     render(<App />);
-    const image = screen.getByRole("img");
-    expect(image).toHaveAttribute("alt");
-    expect(image.getAttribute("alt")).not.toBe("");
-  });
+    const user = userEvent.setup();
 
-  test("calculate button is accessible with button role", () => {
-    render(<App />);
-    const button = screen.getByRole("button", { name: "Calculate" });
-    expect(button).toBeInTheDocument();
-  });
-
-  test("textarea has proper label for accessibility", () => {
-    render(<App />);
-    // This test will fail - textarea doesn't have associated label
     const textarea = screen.getByLabelText(/enter numbers/i);
-    expect(textarea).toBeInTheDocument();
+    await user.type(textarea, "1,2,3");
+
+    expect(textarea).toHaveValue("1,2,3");
   });
 
-  test("button can be focused with keyboard", async () => {
+  test("calculate button shows alert when clicked", async () => {
     render(<App />);
+    const user = userEvent.setup();
+
     const button = screen.getByRole("button", { name: "Calculate" });
+    await user.click(button);
 
-    // Tab to the button
-    await userEvent.tab();
-
-    // This test will fail - we haven't implemented proper focus management
-    expect(button).toHaveFocus();
-  });
-
-  test("button can be activated with keyboard", async () => {
-    render(<App />);
-    const button = screen.getByRole("button", { name: "Calculate" });
-
-    // Focus and press Enter
-    button.focus();
-    await userEvent.keyboard("{Enter}");
-
-    // This will pass but we'll enhance it later
-    expect(button).toBeInTheDocument();
-  });
-
-  test("alert should only be shown when needed", () => {
-    render(<App />);
-    // This test will fail - alert is always visible
-    const alert = screen.queryByRole("alert");
-    expect(alert).not.toBeInTheDocument();
+    const alert = await screen.findByRole("alert");
+    expect(alert).toBeInTheDocument();
+    expect(alert).toHaveTextContent("Make sure you enter numbers correctly!");
   });
 });

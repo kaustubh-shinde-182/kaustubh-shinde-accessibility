@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
+import { toHaveNoViolations } from "jest-axe";
 import { expect } from "vitest";
 
-// Optional: Extend Vitest expectations with jest-dom matchers
-// This happens automatically with @testing-library/jest-dom
+expect.extend(toHaveNoViolations);
