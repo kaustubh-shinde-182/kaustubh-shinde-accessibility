@@ -88,7 +88,6 @@ describe("App Accessibility", () => {
     const user = userEvent.setup();
 
     const textarea = screen.getByLabelText(/enter numbers/i);
-    const button = screen.getByRole("button", { name: "Calculate" });
 
     // Focus textarea and use Ctrl+Enter
     await user.click(textarea);
@@ -106,5 +105,25 @@ describe("App Accessibility", () => {
 
     const instructions = screen.getByText(/enter numbers separated by commas/i);
     expect(instructions).toHaveAttribute("id", "input-instructions");
+  });
+
+  // Update just the alert test in the accessibility file
+  test("alert is properly announced to screen readers for errors", async () => {
+    render(<App />);
+
+    // Initially, no alert should be present
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+    // Trigger an error by entering negative numbers
+    const textarea = screen.getByLabelText(/enter numbers/i);
+    const button = screen.getByRole("button", { name: "Calculate" });
+
+    await userEvent.type(textarea, "1,-2,3");
+    await userEvent.click(button);
+
+    // Alert should now be present with error message
+    const alert = await screen.findByRole("alert");
+    expect(alert).toBeInTheDocument();
+    expect(alert).toHaveTextContent(/negative numbers not allowed/i);
   });
 });
