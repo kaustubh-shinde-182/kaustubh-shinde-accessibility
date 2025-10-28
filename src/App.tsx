@@ -26,17 +26,18 @@ const App = () => {
         onChange={(e) => setInput(e.target.value)}
       />
 
-      <div
+      <button
         onClick={handleCalculate}
         style={{
           padding: "10px",
           backgroundColor: "#008cba",
           color: "#fff",
           border: "none",
+          cursor: "pointer",
         }}
       >
         Calculate
-      </div>
+      </button>
 
       {result !== null && <p style={{ color: "green" }}>Result: {result}</p>}
 
