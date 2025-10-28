@@ -35,6 +35,7 @@ const App = () => {
       buttonRef.current?.focus();
     }
     if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
       handleCalculate();
     }
   };
@@ -77,17 +78,28 @@ const App = () => {
         }}
       >
         <div>
-          <label
-            htmlFor="numbers-input"
-            style={{ display: "block", marginBottom: "8px" }}
-          >
-            <h2 style={{ fontSize: "20px", margin: "0 0 8px 0" }}>
+          <div>
+            <h2
+              style={{ fontSize: "20px", margin: "0 0 8px 0" }}
+              id="numbers-label"
+            >
               Enter numbers
             </h2>
-          </label>
+            <label
+              htmlFor="numbers-input"
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontSize: "14px",
+              }}
+            >
+              Enter numbers separated by commas in the field below
+            </label>
+          </div>
           <div>
             <textarea
               id="numbers-input"
+              aria-label="numbers-label"
               style={{
                 margin: "10px 0",
                 color: "#333",
